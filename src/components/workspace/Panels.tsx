@@ -167,7 +167,7 @@ export function StrategyTab({ strategyId, runs, onDownload }: { strategyId: stri
   const [files, setFiles] = useState<StrategyFiles | null>(null);
   const [failed, setFailed] = useState(false);
   const [errors, setErrors] = useState<CompileError[]>([]);
-  useEffect(() => { setFiles(null); getStrategyFiles(strategyId, version).then(setFiles); getCompileErrors(strategyId, version).then(setErrors); }, [strategyId, version]);
+  useEffect(() => { setFiles(null); getStrategyFiles(strategyId, version).then((f) => setFiles(f ?? null)); getCompileErrors(strategyId, version).then(setErrors); }, [strategyId, version]);
   const run = runs?.find((r) => r.version === version);
   const versions = runs?.map((r) => r.version) ?? ["v1", "v2", "v3"];
 
@@ -245,7 +245,7 @@ export function FilesTab({ strategyId, onDownload }: { strategyId: string; onDow
   const [sel, setSel] = useState("EMA_Cross.mq5");
   const [files, setFiles] = useState<StrategyFiles | null>(null);
   const [params, setParams] = useState("");
-  useEffect(() => { getFileTree(strategyId).then(setTree); getStrategyFiles(strategyId, "v3").then(setFiles); getParametersFile(strategyId).then(setParams); }, [strategyId]);
+  useEffect(() => { getFileTree(strategyId).then(setTree); getStrategyFiles(strategyId, "v3").then((f) => setFiles(f ?? null)); getParametersFile(strategyId).then(setParams); }, [strategyId]);
   if (!tree || !files) return <Skeleton className="h-40" />;
   const icon = (t: string) => t === "mq5" ? FileCode2 : t === "ex5" ? FileBox : t === "dir" ? Folder : FileText;
   return (
