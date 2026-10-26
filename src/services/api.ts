@@ -78,7 +78,7 @@ export async function runBacktest(
 
 export async function getStrategyFiles(_strategyId: string, version: string) {
   await wait(120);
-  return clone(strategyFiles[version] ?? strategyFiles.v3);
+  return clone((strategyFiles[version] ?? strategyFiles["v3"])!);
 }
 
 export async function getCompileErrors(_strategyId: string, _version: string) {
@@ -102,7 +102,7 @@ export async function downloadStrategy(
   version: string,
   type: "mq5" | "ex5" | "zip",
 ) {
-  const files = strategyFiles[version] ?? strategyFiles.v3;
+  const files = (strategyFiles[version] ?? strategyFiles["v3"])!;
   const name = type === "zip" ? `EMA_Cross_${version}.zip` : type === "mq5" ? files.mq5.filename : files.ex5.filename;
   const content = type === "mq5" ? files.mq5.source : `Mock ${type} file for ${strategyId} ${version}`;
   const url = URL.createObjectURL(new Blob([content], { type: "application/octet-stream" }));

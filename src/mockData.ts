@@ -101,7 +101,7 @@ export function makeTrades(seed: number): Trade[] {
     const entry = 1.08 + r() * 0.03;
     const move = (r() - 0.42) * 0.006;
     const exit = side === "Buy" ? entry + move : entry - move;
-    const size = [0.1, 0.2, 0.5][Math.floor(r() * 3)];
+    const size = [0.1, 0.2, 0.5][Math.floor(r() * 3)] ?? 0.1;
     const pnl = Math.round(move * size * 100000 * 100) / 100;
     const day = 31 - k * 2;
     out.push({
@@ -186,7 +186,7 @@ const versionMeta: Record<string, { changes: string; seed: number; drift: number
 export function buildRun(version: string, idx: number): BacktestRun {
   const m = versionMeta[version] ?? { changes: "Parameter tweak", seed: 100 + idx * 7, drift: 10 + (idx % 5) * 3, date: new Date().toISOString().slice(0, 16).replace("T", " ") };
   const equity = makeEquity(m.seed, m.drift);
-  const final = equity[equity.length - 1].equity;
+  const final = equity[equity.length - 1]!.equity;
   let peak = 0;
   let maxDd = 0;
   for (const p of equity) {
@@ -220,7 +220,7 @@ export const strategyFiles: Record<string, StrategyFiles> = Object.fromEntries(
       name: "EMA crossover EURUSD",
       version: v,
       mq5: { filename: "EMA_Cross.mq5", sizeKb: 3.8 + i * 0.4, source: mq5Source },
-      ex5: { filename: "EMA_Cross.ex5", sizeKb: 21.4 + i * 1.2, compiledAt: versionMeta[v].date },
+      ex5: { filename: "EMA_Cross.ex5", sizeKb: 21.4 + i * 1.2, compiledAt: versionMeta[v]!.date },
       summary: {
         does: "Buys when the fast moving average crosses above the slow one and sells when it crosses below. Only one trade is open at a time. Each trade has a stop loss sized by recent volatility (ATR) and a take-profit at twice the risk.",
         inputs: [
